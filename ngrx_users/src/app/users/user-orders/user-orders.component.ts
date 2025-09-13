@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { loadUsers, selectUser } from './data-access/users.actions';
-import { loadOrders } from './../orders/orders.actions';
-import { UserId } from '../shared/types/api.types';
+import { loadUsers, selectUser } from '../data-access/users.actions';
+import { loadOrders } from '../../orders/orders.actions';
+import { UserId } from '../../shared/types/api.types';
 
 @Component({
     selector: 'app-user-orders',
     standalone: true,
     imports: [],
     templateUrl: './user-orders.component.html',
+    styleUrls: ['./user-orders.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserOrdersComponent {

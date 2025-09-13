@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
-import { UserOrdersComponent } from './users/user-orders.component';
-import { SelectedUserNameComponent } from './users/selected-user-name.component';
-import { SelectedUserTotalComponent } from './users/selected-user-total.component';
+import { UserOrdersComponent } from './users/user-orders/user-orders.component';
+import { SelectedUserNameComponent } from './users/selected-user-name/selected-user-name.component';
+import { SelectedUserTotalComponent } from './users/selected-user-total/selected-user-total.component';
 
 @Component({
   selector: 'app-root',
