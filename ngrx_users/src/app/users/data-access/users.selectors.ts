@@ -1,19 +1,32 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { USERS_FEATURE_KEY, UsersState } from './users.reducer';
+import { USERS_FEATURE_KEY, UsersState, adapter } from './users.reducer';
 
-export const selectUsersState = createFeatureSelector<UsersState>(USERS_FEATURE_KEY);
+/** Feature selector for the Users feature */
+export const selectUsersState =
+    createFeatureSelector<UsersState>(USERS_FEATURE_KEY);
 
-export const selectUsersList = createSelector(
+/** Adapter-provided selectors (selectIds/selectEntities/selectAll/selectTotal) */
+const { selectAll, selectEntities, selectIds, selectTotal } =
+    adapter.getSelectors(selectUsersState);
+
+/** Public selectors for the UI / effects / other features */
+export const selectUsersList = createSelector(selectAll, (list) => {
+    console.log('[Selector][Entity] selectAll size:', list.length);
+    return list;
+});
+export const selectUsersEntities = selectEntities;
+export const selectUsersIds = selectIds;
+export const selectUsersTotal = selectTotal;
+
+export const selectUsersLoading = createSelector(
     selectUsersState,
-    (state) => {
-        console.log('[Selector] Users selected from store:', state.list);
-        return state.list;
-    }
+    (s) => s.loading
 );
-
-
-/** Loading flag for spinners/skeletons */
-export const selectUsersLoading = createSelector(selectUsersState, (state) => state.loading);
-
-/** Error if needed */
-export const selectUsersError = createSelector(selectUsersState, (state) => state.error);
+export const selectUsersError = createSelector(
+    selectUsersState,
+    (s) => s.error
+);
+export const selectSelectedUserId = createSelector(
+    selectUsersState,
+    (s) => s.selectedUserId
+);

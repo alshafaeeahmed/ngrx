@@ -1,45 +1,52 @@
 import { createReducer, on } from '@ngrx/store';
+import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import * as UsersActions from './users.actions';
 import { User } from './users.models';
 
 export const USERS_FEATURE_KEY = 'users';
 
-export interface UsersState {
-    list: User[];         // users data
-    loading: boolean;     // loading flag for UI
+/** Entity state for Users; ids/entities maintained by @ngrx/entity */
+export interface UsersState extends EntityState<User> {
+    loading: boolean;
     error: unknown | null;
+    /** will be used in later sections (selectors / navigation) */
+    selectedUserId: number | null;
 }
 
-export const initialState: UsersState = {
-    list: [],
+/** Create an adapter with default selectId (user.id) and no sort comparer */
+export const adapter = createEntityAdapter<User>({
+    selectId: (u) => u.id,
+    sortComparer: false,
+});
+
+/** Add complementary flags next to the entity collection */
+export const initialState: UsersState = adapter.getInitialState({
     loading: false,
     error: null,
-};
+    selectedUserId: null,
+});
 
 export const usersReducer = createReducer(
     initialState,
 
-    // Start loading on loadUsers
+    // Keep from §1: loading flow
     on(UsersActions.loadUsers, (state) => ({
         ...state,
         loading: true,
-        error: null
+        error: null,
     })),
 
-    // Save users in Store on success
+    // Save the whole collection in a normalized way (ids + entities)
     on(UsersActions.loadUsersSuccess, (state, { users }) => {
-        console.log('[Reducer] Saving users into store:', users);
-        return {
-            ...state,
-            list: users,
-            loading: false
-        };
+        const next = adapter.setAll(users, state);
+        console.log('[Reducer][Entity] setAll -> ids:', next.ids, 'total:', users.length);
+        return { ...next, loading: false };
     }),
 
-    // Save error, stop loading
+
     on(UsersActions.loadUsersFailure, (state, { error }) => ({
         ...state,
         error,
-        loading: false
-    }))
+        loading: false,
+    })),
 );
