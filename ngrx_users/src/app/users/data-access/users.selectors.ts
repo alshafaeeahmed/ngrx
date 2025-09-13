@@ -1,6 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { USERS_FEATURE_KEY, UsersState, adapter } from './users.reducer';
 import { selectOrdersList } from '../../orders/orders.selectors';
+import { UserOrderSummary } from '../../shared/types/api.types';
 
 /** Feature selector for the Users feature */
 export const selectUsersState =
@@ -64,13 +65,13 @@ export const selectSelectedUserOrders = createSelector(
 export const selectSelectedUserSummary = createSelector(
     selectSelectedUser,        // { id, name, ... } | null
     selectSelectedUserOrders,  // Order[]
-    (user, orders) => {
+    (user, orders): UserOrderSummary => {
         if (!user) {
             console.log('[Selector] summary -> no selected user');
-            return { userName: null as string | null, totalOrders: 0 };
+            return { userName: null, totalOrders: 0 };
         }
         const total = orders.reduce((acc, o) => acc + (o.total || 0), 0);
-        const summary = { userName: user.name, totalOrders: total };
+        const summary: UserOrderSummary = { userName: user.name, totalOrders: total };
         console.log('[Selector] summary ->', summary);
         return summary;
     }

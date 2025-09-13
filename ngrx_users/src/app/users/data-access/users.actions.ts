@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { User } from './users.models';
+import { ApiError, UserId } from '../../shared/types/api.types';
 
 /** Component requests to load users (triggered on init). */
 export const loadUsers = createAction('[Users] Load Users');
@@ -13,7 +14,7 @@ export const loadUsersSuccess = createAction(
 /** Effect returns an error from API. */
 export const loadUsersFailure = createAction(
     '[Users] Load Users Failure',
-    props<{ error: unknown }>()
+    props<{ error: ApiError }>()
 );
 // Add a single user (should avoid duplicates by id)
 export const addUser = createAction(
@@ -46,5 +47,5 @@ export const removeUser = createAction(
 );
 export const selectUser = createAction(
     '[Users] Select User',
-    props<{ id: number | null }>()
+    props<{ id: UserId }>()
 );

@@ -4,6 +4,7 @@ import * as UsersActions from './users.actions';
 import { UserService } from './users.service';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { ErrorHandlerUtil } from '../../shared/utils/error-handler.util';
 
 /**
  * Effects isolate side effects (like HTTP calls) away from components.
@@ -25,8 +26,9 @@ export class UsersEffects {
                         return UsersActions.loadUsersSuccess({ users });
                     }),
                     catchError((error) => {
-                        console.error('[Effect] API failed:', error);
-                        return of(UsersActions.loadUsersFailure({ error }));
+                        ErrorHandlerUtil.logError('UsersEffect.loadUsers', error);
+                        const apiError = ErrorHandlerUtil.handleHttpError(error);
+                        return of(UsersActions.loadUsersFailure({ error: apiError }));
                     })
                 );
             })

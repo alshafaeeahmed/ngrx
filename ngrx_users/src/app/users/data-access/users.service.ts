@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, delay } from 'rxjs';
 import { User } from './users.models';
+import { MOCK_USERS } from '../../shared/mock-data/users.mock';
+import { API_CONFIG } from '../../shared/constants/api.constants';
 // If you have HttpClient later: import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
@@ -9,21 +11,11 @@ export class UserService {
 
     /**
      * Simulates an API call to fetch users.
+     * In production, this would make an HTTP request to the backend.
      */
     getUsers(): Observable<User[]> {
-        const mock: User[] = [
-            { id: 1, name: 'Alice Cohen', },
-            { id: 2, name: 'Bob Levy', },
-            { id: 3, name: 'Charlie Smith', },
-            { id: 4, name: 'Diana Brown', },
-            { id: 5, name: 'Ethan Davis', },
-            { id: 6, name: 'Fiona Wilson', },
-            { id: 7, name: 'George Thompson', },
-            { id: 8, name: 'Hannah Lee', },
-            { id: 9, name: 'Isaac Clark', },
-        ];
-        return of(mock).pipe(delay(600));
+        return of(MOCK_USERS).pipe(delay(API_CONFIG.DELAYS.USERS));
         // Real world:
-        // return this.http.get<User[]>('/api/users');
+        // return this.http.get<User[]>(API_CONFIG.ENDPOINTS.USERS);
     }
 }

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { loadUsers, selectUser } from './data-access/users.actions';
 import { loadOrders } from './../orders/orders.actions';
+import { UserId } from '../shared/types/api.types';
 
 @Component({
     selector: 'app-user-orders',
@@ -14,7 +15,7 @@ export class UserOrdersComponent {
     private readonly store = inject(Store);
 
     /** Handlers to change selected user; in real app bind to list */
-    selectUser(id: number | null) {
+    selectUser(id: UserId): void {
         // Dispatch selection action; null clears selection
         this.store.dispatch(selectUser({ id }));
     }
