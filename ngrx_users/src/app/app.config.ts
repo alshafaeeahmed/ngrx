@@ -7,14 +7,16 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { USERS_FEATURE_KEY, usersReducer } from './users/data-access/users.reducer';
 import { UsersEffects } from './users/data-access/users.effects';
+import { ORDERS_FEATURE_KEY, ordersReducer } from './orders/orders.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
-    provideStore({ [USERS_FEATURE_KEY]: usersReducer }),
+    provideStore({ [USERS_FEATURE_KEY]: usersReducer, [ORDERS_FEATURE_KEY]: ordersReducer }),
     provideEffects([UsersEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })
+
   ]
 };

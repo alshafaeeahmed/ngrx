@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { USERS_FEATURE_KEY, UsersState, adapter } from './users.reducer';
+import { selectOrdersList } from '../../orders/orders.selectors';
 
 /** Feature selector for the Users feature */
 export const selectUsersState =
@@ -26,7 +27,52 @@ export const selectUsersError = createSelector(
     selectUsersState,
     (s) => s.error
 );
+
+/** selectedUserId (primitive) */
 export const selectSelectedUserId = createSelector(
     selectUsersState,
     (s) => s.selectedUserId
 );
+
+/** §4a: Selected user object (or null if none selected) */
+export const selectSelectedUser = createSelector(
+    selectSelectedUserId,
+    selectUsersEntities,
+    (selectedId, entities) => {
+        const user = selectedId != null ? entities[selectedId] ?? null : null;
+        console.log(
+            '[Selector][Entity] selectSelectedUser -> id:',
+            selectedId,
+            'user:',
+            user
+        );
+        return user;
+    }
+);
+
+/** §4b: All orders for the currently selected user */
+export const selectSelectedUserOrders = createSelector(
+    selectSelectedUserId,
+    selectOrdersList, // comes from orders.selectors.ts
+    (selectedId, orders) => {
+        const list = selectedId == null ? [] : orders.filter(o => o.userId === selectedId);
+        console.log('[Selector] orders for selected user:', selectedId, '->', list.length);
+        return list;
+    }
+);
+/** §4c: Summary object { userName, totalOrders } for the selected user */
+export const selectSelectedUserSummary = createSelector(
+    selectSelectedUser,        // { id, name, ... } | null
+    selectSelectedUserOrders,  // Order[]
+    (user, orders) => {
+        if (!user) {
+            console.log('[Selector] summary -> no selected user');
+            return { userName: null as string | null, totalOrders: 0 };
+        }
+        const total = orders.reduce((acc, o) => acc + (o.total || 0), 0);
+        const summary = { userName: user.name, totalOrders: total };
+        console.log('[Selector] summary ->', summary);
+        return summary;
+    }
+);
+
