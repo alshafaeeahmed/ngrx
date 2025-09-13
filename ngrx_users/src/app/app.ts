@@ -1,9 +1,11 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { UserOrdersComponent } from './users/user-orders.component';
+import { SelectedUserNameComponent } from './users/selected-user-name.component';
+import { SelectedUserTotalComponent } from './users/selected-user-total.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [UserOrdersComponent, SelectedUserNameComponent, SelectedUserTotalComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

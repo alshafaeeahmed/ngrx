@@ -75,4 +75,13 @@ export const selectSelectedUserSummary = createSelector(
         return summary;
     }
 );
+// user name only (null-safe)
+export const selectSelectedUserName = createSelector(
+    selectSelectedUser,
+    (u) => u?.name ?? null
+);
 
+export const selectSelectedUserTotalOrders = createSelector(
+    selectSelectedUserSummary,
+    (s) => s.totalOrders
+);

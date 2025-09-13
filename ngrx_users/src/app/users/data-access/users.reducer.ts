@@ -73,4 +73,9 @@ export const usersReducer = createReducer(
         console.log('[Reducer][CRUD] removeUser -> id:', id);
         return adapter.removeOne(id, state);
     }),
+    // Select a user id (can be null to clear selection)
+    on(UsersActions.selectUser, (state, { id }) => ({
+        ...state,
+        selectedUserId: id
+    }))
 );
