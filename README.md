@@ -1,59 +1,164 @@
-# NgrxUsers
+# NgRx Users & Orders Demo
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.1.
+פרויקט הדגמה של Angular עם NgRx לניהול מצב אפליקציה - Users ו-Orders.
 
-## Development server
+## תיאור הפרויקט
 
-To start a local development server, run:
+פרויקט זה מדגים שימוש ב-NgRx לניהול מצב אפליקציה עם שתי features עיקריות:
+
+- **Users**: ניהול רשימת משתמשים עם אפשרות בחירה
+- **Orders**: ניהול הזמנות של משתמשים
+
+## ארכיטקטורה NgRx
+
+### Store Structure
+
+```typescript
+{
+  users: {
+    entities: { [id]: User },
+    ids: number[],
+    selectedUserId: number | null,
+    loading: boolean,
+    error: string | null
+  },
+  orders: {
+    entities: { [id]: Order },
+    ids: number[]
+  }
+}
+```
+
+### Features Implemented
+
+#### 1. Users Feature (`/src/app/users/data-access/`)
+
+- **Actions**: `loadUsers`, `loadUsersSuccess`, `loadUsersFailure`, `selectUser`, `addUser`, `updateUser`, `removeUser`
+- **Reducer**: Entity adapter pattern עם `@ngrx/entity`
+- **Effects**: `UsersEffects` - טיפול ב-API calls
+- **Selectors**: `selectSelectedUser`, `selectSelectedUserSummary`, `selectSelectedUserOrders`
+- **Service**: `UserService` - API simulation
+
+#### 2. Orders Feature (`/src/app/orders/`)
+
+- **Actions**: `loadOrders`, `loadOrdersSuccess`, `loadOrdersFailure`
+- **Reducer**: Entity adapter pattern
+- **Effects**: `OrdersEffects` - טיפול ב-API calls
+- **Selectors**: `selectOrdersList`, `selectOrdersEntities`
+- **Service**: `OrdersService` - API simulation
+
+### Components Architecture
+
+#### 1. UserOrdersComponent
+
+- קומפוננטה ראשית עם כפתורים לבחירת משתמש
+- Dispatch actions: `loadUsers()`, `loadOrders()`, `selectUser()`
+
+#### 2. SelectedUserNameComponent
+
+- קומפוננטה נפרדת המציגה שם המשתמש הנבחר
+- משתמשת ב-selector: `selectSelectedUserName`
+
+#### 3. SelectedUserTotalComponent
+
+- קומפוננטה נפרדת המציגה סך הזמנות של המשתמש
+- משתמשת ב-selector: `selectSelectedUserTotalOrders`
+
+## NgRx Patterns Demonstrated
+
+### 1. Entity Adapter Pattern
+
+```typescript
+// Users reducer with entity adapter
+export const adapter = createEntityAdapter<User>({
+  selectId: (user) => user.id,
+  sortComparer: false,
+});
+```
+
+### 2. Effects Pattern
+
+```typescript
+// Users effects
+loadUsers$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(UsersActions.loadUsers),
+    switchMap(() =>
+      this.userService.getUsers().pipe(
+        map((users) => UsersActions.loadUsersSuccess({ users })),
+        catchError((error) => of(UsersActions.loadUsersFailure({ error })))
+      )
+    )
+  )
+);
+```
+
+### 3. Selectors Pattern
+
+```typescript
+// Complex selector combining multiple features
+export const selectSelectedUserSummary = createSelector(
+  selectSelectedUser,
+  selectSelectedUserOrders,
+  (user, orders) => ({
+    userName: user?.name ?? null,
+    totalOrders: orders.reduce((acc, o) => acc + o.total, 0),
+  })
+);
+```
+
+### 4. Modern Angular Patterns
+
+- **Standalone Components**: כל הקומפוננטות הן standalone
+- **Inject Function**: שימוש ב-`inject()` במקום constructor injection
+- **Signal-based**: שימוש ב-signals במקומות מתאימים
+
+## File Structure
+
+```
+src/app/
+├── app.config.ts          # NgRx store configuration
+├── app.ts                 # Root component
+├── app.html               # Root template
+├── users/
+│   ├── data-access/       # NgRx users feature
+│   │   ├── users.actions.ts
+│   │   ├── users.effects.ts
+│   │   ├── users.reducer.ts
+│   │   ├── users.selectors.ts
+│   │   └── users.service.ts
+│   ├── user-orders/       # Main component
+│   ├── selected-user-name/ # Display component
+│   └── selected-user-total/ # Display component
+├── orders/                # NgRx orders feature
+│   ├── orders.actions.ts
+│   ├── orders.effects.ts
+│   ├── orders.reducer.ts
+│   ├── orders.selectors.ts
+│   └── orders.service.ts
+└── shared/                # Shared utilities
+    ├── constants/
+    ├── mock-data/
+    ├── types/
+    └── utils/
+```
+
+## Development
+
+### התחלת הפרויקט
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+### Build
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Tests
 
 ```bash
 ng test
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
