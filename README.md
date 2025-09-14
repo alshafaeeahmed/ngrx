@@ -107,11 +107,6 @@ export const selectSelectedUserSummary = createSelector(
 );
 ```
 
-### 4. Modern Angular Patterns
-
-- **Standalone Components**: All components are standalone
-- **Inject Function**: Using `inject()` instead of constructor injection
-- **Signal-based**: Using signals where appropriate
 
 ## Development
 
