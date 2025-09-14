@@ -70,3 +70,13 @@ export const selectSelectedUserTotalOrders = createSelector(
     selectSelectedUserSummary,
     (s) => s.totalOrders
 );
+
+export const selectLoadingSelectedUserDetails = createSelector(
+    selectUsersState,
+    (s) => s.loadingSelectedUserDetails
+);
+
+export const selectSelectedUserDetails = createSelector(
+    selectUsersState,
+    (s) => s.selectedUserDetails
+);
