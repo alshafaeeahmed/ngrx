@@ -1,15 +1,15 @@
 # NgRx Users & Orders Demo
 
-פרויקט הדגמה של Angular עם NgRx לניהול מצב אפליקציה - Users ו-Orders.
+Angular demonstration project with NgRx for state management - Users and Orders.
 
-## תיאור הפרויקט
+## Project Description
 
-פרויקט זה מדגים שימוש ב-NgRx לניהול מצב אפליקציה עם שתי features עיקריות:
+This project demonstrates the use of NgRx for application state management with two main features:
 
-- **Users**: ניהול רשימת משתמשים עם אפשרות בחירה
-- **Orders**: ניהול הזמנות של משתמשים
+- **Users**: User list management with selection capability
+- **Orders**: User orders management
 
-## ארכיטקטורה NgRx
+## NgRx Architecture
 
 ### Store Structure
 
@@ -34,8 +34,8 @@
 #### 1. Users Feature (`/src/app/users/data-access/`)
 
 - **Actions**: `loadUsers`, `loadUsersSuccess`, `loadUsersFailure`, `selectUser`, `addUser`, `updateUser`, `removeUser`
-- **Reducer**: Entity adapter pattern עם `@ngrx/entity`
-- **Effects**: `UsersEffects` - טיפול ב-API calls
+- **Reducer**: Entity adapter pattern with `@ngrx/entity`
+- **Effects**: `UsersEffects` - API calls handling
 - **Selectors**: `selectSelectedUser`, `selectSelectedUserSummary`, `selectSelectedUserOrders`
 - **Service**: `UserService` - API simulation
 
@@ -43,7 +43,7 @@
 
 - **Actions**: `loadOrders`, `loadOrdersSuccess`, `loadOrdersFailure`
 - **Reducer**: Entity adapter pattern
-- **Effects**: `OrdersEffects` - טיפול ב-API calls
+- **Effects**: `OrdersEffects` - API calls handling
 - **Selectors**: `selectOrdersList`, `selectOrdersEntities`
 - **Service**: `OrdersService` - API simulation
 
@@ -51,18 +51,18 @@
 
 #### 1. UserOrdersComponent
 
-- קומפוננטה ראשית עם כפתורים לבחירת משתמש
+- Main component with user selection buttons
 - Dispatch actions: `loadUsers()`, `loadOrders()`, `selectUser()`
 
 #### 2. SelectedUserNameComponent
 
-- קומפוננטה נפרדת המציגה שם המשתמש הנבחר
-- משתמשת ב-selector: `selectSelectedUserName`
+- Separate component displaying the selected user's name
+- Uses selector: `selectSelectedUserName`
 
 #### 3. SelectedUserTotalComponent
 
-- קומפוננטה נפרדת המציגה סך הזמנות של המשתמש
-- משתמשת ב-selector: `selectSelectedUserTotalOrders`
+- Separate component displaying the user's total orders
+- Uses selector: `selectSelectedUserTotalOrders`
 
 ## NgRx Patterns Demonstrated
 
@@ -109,13 +109,13 @@ export const selectSelectedUserSummary = createSelector(
 
 ### 4. Modern Angular Patterns
 
-- **Standalone Components**: כל הקומפוננטות הן standalone
-- **Inject Function**: שימוש ב-`inject()` במקום constructor injection
-- **Signal-based**: שימוש ב-signals במקומות מתאימים
+- **Standalone Components**: All components are standalone
+- **Inject Function**: Using `inject()` instead of constructor injection
+- **Signal-based**: Using signals where appropriate
 
 ## Development
 
-### התחלת הפרויקט
+### Starting the Project
 
 ```bash
 ng serve
