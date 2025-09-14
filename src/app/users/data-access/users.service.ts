@@ -11,4 +11,9 @@ export class UserService {
     getUsers(): Observable<User[]> {
         return of(MOCK_USERS).pipe(delay(API_CONFIG.DELAYS.USERS));
     }
+    getUserDetails(id: number) {
+        const mock = { id, phone: '+972-50-123-4567', address: 'Herzl 10, Tel Aviv', role: 'Member' };
+        return of(mock).pipe(delay(700)); // simulate latency
+    }
+
 }

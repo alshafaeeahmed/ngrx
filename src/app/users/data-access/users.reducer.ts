@@ -10,6 +10,9 @@ export interface UsersState extends EntityState<User> {
     loading: boolean;
     error: unknown | null;
     selectedUserId: number | null;
+
+    selectedUserDetails: any | null;
+    loadingSelectedUserDetails: boolean;
 }
 
 export const adapter = createEntityAdapter<User>({
@@ -21,11 +24,15 @@ export const initialState: UsersState = adapter.getInitialState({
     loading: false,
     error: null,
     selectedUserId: null,
+
+    selectedUserDetails: null,
+    loadingSelectedUserDetails: false,
 });
 
 export const usersReducer = createReducer(
     initialState,
 
+    // =====  load users flow =====
     on(LoadActions.loadUsers, (state) => ({ ...state, loading: true, error: null })),
     on(LoadActions.loadUsersSuccess, (state, { users }) => {
         const next = adapter.setAll(users, state);
@@ -34,6 +41,7 @@ export const usersReducer = createReducer(
     }),
     on(LoadActions.loadUsersFailure, (state, { error }) => ({ ...state, error, loading: false })),
 
+    // =====  CRUD =====
     on(UsersActions.addUser, (state, { user }) => {
         const exists = !!state.entities[user.id];
         if (exists) {
@@ -48,7 +56,6 @@ export const usersReducer = createReducer(
         return adapter.upsertMany(users, state);
     }),
 
-    // Update one (partial changes)
     on(UsersActions.updateUser, (state, { user }) => {
         console.log('[Reducer][CRUD] updateUser -> id:', user.id, 'changes:', user.changes);
         return adapter.updateOne(user, state);
@@ -58,13 +65,34 @@ export const usersReducer = createReducer(
         return adapter.upsertOne(user, state);
     }),
 
-    // Remove one by id
     on(UsersActions.removeUser, (state, { id }) => {
         return adapter.removeOne(id, state);
     }),
 
+    // =====  selection (extended for §6) =====
     on(UsersActions.selectUser, (state, { id }) => ({
         ...state,
-        selectedUserId: id
+        selectedUserId: id,
+        //  clear previous details on selection change; set loading flag only if id is not null
+        selectedUserDetails: null,
+        loadingSelectedUserDetails: !!id,
+    })),
+
+    // =====  selected user details load/cancel/success/failure =====
+    on(UsersActions.loadSelectedUserDetails, (state) => ({
+        ...state,
+        loadingSelectedUserDetails: true,
+    })),
+
+    on(UsersActions.loadSelectedUserDetailsSuccess, (state, { details }) => ({
+        ...state,
+        selectedUserDetails: details,
+        loadingSelectedUserDetails: false,
+    })),
+
+    on(UsersActions.loadSelectedUserDetailsFailure, (state, { error }) => ({
+        ...state,
+        loadingSelectedUserDetails: false,
+        error,
     }))
 );

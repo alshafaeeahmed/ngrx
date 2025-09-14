@@ -48,3 +48,18 @@ export const selectUser = createAction(
     '[Users] Select User',
     props<{ id: UserId }>()
 );
+
+export const loadSelectedUserDetails = createAction(
+    '[Users] Load Selected User Details',
+    props<{ id: number }>()
+);
+
+export const loadSelectedUserDetailsSuccess = createAction(
+    '[Users] Load Selected User Details Success',
+    props<{ id: number; details: any }>()
+);
+
+export const loadSelectedUserDetailsFailure = createAction(
+    '[Users] Load Selected User Details Failure',
+    props<{ id: number; error: unknown }>()
+);
