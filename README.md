@@ -113,36 +113,6 @@ export const selectSelectedUserSummary = createSelector(
 - **Inject Function**: שימוש ב-`inject()` במקום constructor injection
 - **Signal-based**: שימוש ב-signals במקומות מתאימים
 
-## File Structure
-
-```
-src/app/
-├── app.config.ts          # NgRx store configuration
-├── app.ts                 # Root component
-├── app.html               # Root template
-├── users/
-│   ├── data-access/       # NgRx users feature
-│   │   ├── users.actions.ts
-│   │   ├── users.effects.ts
-│   │   ├── users.reducer.ts
-│   │   ├── users.selectors.ts
-│   │   └── users.service.ts
-│   ├── user-orders/       # Main component
-│   ├── selected-user-name/ # Display component
-│   └── selected-user-total/ # Display component
-├── orders/                # NgRx orders feature
-│   ├── orders.actions.ts
-│   ├── orders.effects.ts
-│   ├── orders.reducer.ts
-│   ├── orders.selectors.ts
-│   └── orders.service.ts
-└── shared/                # Shared utilities
-    ├── constants/
-    ├── mock-data/
-    ├── types/
-    └── utils/
-```
-
 ## Development
 
 ### התחלת הפרויקט
