@@ -6,10 +6,6 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ErrorHandlerUtil } from '../../shared/utils/error-handler.util';
 
-/**
- * Effects isolate side effects (like HTTP calls) away from components.
- * Component dispatches loadUsers -> Effect calls API -> dispatches success/failure.
- */
 @Injectable()
 export class UsersEffects {
     private actions$ = inject(Actions);

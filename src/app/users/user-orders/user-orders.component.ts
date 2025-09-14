@@ -15,14 +15,12 @@ import { UserId } from '../../shared/types/api.types';
 export class UserOrdersComponent {
     private readonly store = inject(Store);
 
-    /** Handlers to change selected user; in real app bind to list */
     selectUser(id: UserId): void {
         // Dispatch selection action; null clears selection
         this.store.dispatch(selectUser({ id }));
     }
 
     ngOnInit(): void {
-        // Kick off loading users and orders on screen load
         this.store.dispatch(loadUsers());
         this.store.dispatch(loadOrders());
     }

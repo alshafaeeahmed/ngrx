@@ -11,22 +11,13 @@ export const ORDERS_FEATURE_KEY = 'orders';
 
 export interface OrdersState extends EntityState<Order> { }
 
-/** Entity adapter for Orders */
 export const ordersAdapter = createEntityAdapter<Order>({
     selectId: (o) => o.id,
     sortComparer: false,
 });
 
-/** Initial state (empty collection) */
 export const initialOrdersState: OrdersState =
     ordersAdapter.getInitialState({});
-
-/**
- * Reducer:
- * - loadOrders: no state change (could set a loading flag if you add one)
- * - loadOrdersSuccess: fill the collection using setAll (entities+ids)
- * - loadOrdersFailure: log/keep state (or set an error flag if you add one)
- */
 export const ordersReducer = createReducer(
     initialOrdersState,
 

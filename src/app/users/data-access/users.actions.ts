@@ -2,7 +2,6 @@ import { createAction, props } from '@ngrx/store';
 import { User } from './users.models';
 import { ApiError, UserId } from '../../shared/types/api.types';
 
-/** Component requests to load users (triggered on init). */
 export const loadUsers = createAction('[Users] Load Users');
 
 /** Effect returns users successfully from API. */

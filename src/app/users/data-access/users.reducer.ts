@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import * as UsersActions from './users.actions';
-import * as LoadActions from './users.actions'; // loadUsers / loadUsersSuccess / loadUsersFailure from §1
+import * as LoadActions from './users.actions';
 import { User } from './users.models';
 
 export const USERS_FEATURE_KEY = 'users';
@@ -26,7 +26,6 @@ export const initialState: UsersState = adapter.getInitialState({
 export const usersReducer = createReducer(
     initialState,
 
-    // ===== From §1 (loading flow) =====
     on(LoadActions.loadUsers, (state) => ({ ...state, loading: true, error: null })),
     on(LoadActions.loadUsersSuccess, (state, { users }) => {
         const next = adapter.setAll(users, state);
@@ -35,9 +34,6 @@ export const usersReducer = createReducer(
     }),
     on(LoadActions.loadUsersFailure, (state, { error }) => ({ ...state, error, loading: false })),
 
-    // ===== §3: CRUD =====
-
-    // Add one — but if id exists, update instead (explicit “no duplicates” logic)
     on(UsersActions.addUser, (state, { user }) => {
         const exists = !!state.entities[user.id];
         if (exists) {
@@ -48,12 +44,8 @@ export const usersReducer = createReducer(
         return adapter.addOne(user, state);
     }),
 
-    // Add many — rely on upsertMany to be safe, or validate individually
     on(UsersActions.addUsers, (state, { users }) => {
-        console.log('[Reducer][CRUD] addUsers -> count:', users.length);
-        // Option A: use upsertMany to avoid duplicates safely
         return adapter.upsertMany(users, state);
-        // Option B: loop & apply same addUser logic (more verbose)
     }),
 
     // Update one (partial changes)
@@ -62,18 +54,15 @@ export const usersReducer = createReducer(
         return adapter.updateOne(user, state);
     }),
 
-    // Save (Upsert) one — canonical “save” semantics
     on(UsersActions.saveUser, (state, { user }) => {
-        console.log('[Reducer][CRUD] saveUser (upsertOne) -> id:', user.id);
         return adapter.upsertOne(user, state);
     }),
 
     // Remove one by id
     on(UsersActions.removeUser, (state, { id }) => {
-        console.log('[Reducer][CRUD] removeUser -> id:', id);
         return adapter.removeOne(id, state);
     }),
-    // Select a user id (can be null to clear selection)
+
     on(UsersActions.selectUser, (state, { id }) => ({
         ...state,
         selectedUserId: id
